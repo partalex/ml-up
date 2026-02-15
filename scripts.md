@@ -8,6 +8,7 @@ mypy ./src
 
 ```bash
 python3 src/main.py
+mypy .\src\simulator.py
 ```
 
 ## Generate report
