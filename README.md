@@ -49,18 +49,6 @@ Ako agent pokuša da:
 - Izađe van granica grid-a (udari u zid) → ostaje u istom stanju
 - Uđe u rupu (B2 ili B4) → ostaje u istom stanju
 
-### Terminalna Stanja
-
-Stanja B1, B3 i B5 su terminalna:
-
-- **Kada agent uđe u terminalno stanje**: Dobija nagradu 0 i `done=True`
-- **Kada agent preduzme akciju u terminalnom stanju**: Tada dobija odgovarajuću nagradu (-1, -1, ili +3)
-- Epizoda se završava
-- Agent se automatski vraća u početno stanje A1
-
-**Važno**: Nagrada se dobija tek kada agent **preduzme akciju** u terminalnom stanju, ne pri samom ulasku!
-
-**Primer**:
 **Primer**:
 
 ```
@@ -80,57 +68,12 @@ Korak 2: Agent u B5 (terminalno)
 | 1     | A4         | DOWN   | B5           | 0      | True | Ulazak u terminalno  |
 | 2     | B5         | UP     | A1           | +3     | True | Akcija u terminalnom |
 
-## Primer Korišćenja
-
-```python
-from simulator import Simulator, Action
-
-# Inicijalizuj simulator
-sim = Simulator()
-
-# Izvrši akciju
-reward, new_state, done = sim.step(Action.RIGHT)
-
-# Proveri stanje
-print(f"Novo stanje: {sim.get_state_name(new_state)}")
-print(f"Nagrada: {reward}")
-print(f"Završeno: {done}")
-
-# Resetuj simulator
-sim.reset()
-```
-
-## Pokretanje
+### Grid World Simulator
 
 ```bash
-# Pokreni primer
+# Pokreni primer simulatora
 python src/main.py
 
 # Proveri tipove
 mypy src/simulator.py src/main.py
 ```
-
-## Važne napomene
-
-### Nagrađivanje u terminalnim stanjima
-
-**Ključna osobina**: Nagrada se dobija tek kada agent **preduzme akciju** u terminalnom stanju, ne pri samom ulasku!
-
-**Razlog**: Ovo je u skladu sa MDP (Markov Decision Process) semantikom gde nagrada dolazi kao posledica akcije, ne
-stanja.
-
-Za detaljno objašnjenje, pogledajte: [REWARD_TIMING.md](REWARD_TIMING.md)
-
-## Struktura Projekta
-
-```
-ml-up/
-├── src/
-│   ├── simulator.py    # Grid world simulator
-│   └── main.py         # Primer korišćenja
-├── test_grid.py        # Test skripta
-├── mypy.ini            # Konfiguracija mypy
-├── requirements.txt    # Python dependencies
-└── README.md           # Ova dokumentacija
-```
-
