@@ -38,11 +38,11 @@ Okruženje je 2×5 grid world sa rupama na pozicijama B2 i B4:
 
 Q-učenje je off-policy temporal difference algoritam koji uči optimalnu funkciju akcione vrednosti Q*(s,a).
 
-## Eksperiment 1: Promenljiva stopa učenja (γ = 0.9)
+## Eksperiment 1: Promenljiva stopa učenja ($\gamma$ = 0.9)
 
-Stopa učenja: α_e = ln(e+1)/(e+1), gde je e redni broj epizode
+Stopa učenja: $\alpha$_e = ln(e+1)/(e+1), gde je e redni broj epizode
 
-![Q-učenje sa promenljivim α i γ=0.9](out/01-q-learning/(γ=0.9,_variable_α).png)
+![Q-učenje sa promenljivim alpha i game=0.9](out/01-q-learning/(gama=0.9,_variable_alpha).png)
 
 **Zapažanja:**
 
@@ -50,11 +50,11 @@ Stopa učenja: α_e = ln(e+1)/(e+1), gde je e redni broj epizode
 - V-vrednosti se stabilizuju kako agent uči optimalnu politiku
 - Prosečna nagrada konvergira ka optimalnoj vrednosti
 
-## Eksperiment 2: Konstantna stopa učenja (γ = 0.9)
+## Eksperiment 2: Konstantna stopa učenja ($\gamma$ = 0.9)
 
-Stopa učenja: α = 0.1 (konstantna)
+Stopa učenja: $\alpha$ = 0.1 (konstantna)
 
-![Q-učenje sa konstantnim α=0.1 i γ=0.9](out/01-q-learning/(γ=0.9,_constant_α=0.1).png)
+![Q-učenje sa konstantnim alpha=0.1 i gama=0.9](out/01-q-learning/(gama=0.9,_constant_alpha=0.1).png)
 
 **Poređenje:**
 
@@ -62,15 +62,15 @@ Stopa učenja: α = 0.1 (konstantna)
 - Promenljiva stopa učenja obezbeđuje stabilniju konvergenciju u kasnijim epizodama
 - Oba pristupa uspešno uče optimalnu politiku
 
-## Eksperiment 3: Visok faktor umanjenja (γ = 0.999)
+## Eksperiment 3: Visok faktor umanjenja ($\gamma$ = 0.999)
 
-Stopa učenja: α_e = ln(e+1)/(e+1) (promenljiva)
+Stopa učenja: $\alpha$_e = ln(e+1)/(e+1) (promenljiva)
 
-![Q-učenje sa promenljivim α i γ=0.999](out/01-q-learning/(γ=0.999,_variable_α).png)
+![Q-učenje sa promenljivim alpha i gama=0.999](out/01-q-learning/(gama=0.999,_variable_alpha).png)
 
 **Analiza:**
 
-- Veće γ više ceni buduće nagrade
+- Veće $\gamma$ više ceni buduće nagrade
 - Agent uči da konzistentnije navigira ka B5 (nagrada: +3)
 - Konvergencija traje nešto duže zbog propagacije dugoročnih nagrada
 
@@ -81,11 +81,11 @@ Stopa učenja: α_e = ln(e+1)/(e+1) (promenljiva)
 REINFORCE je Monte Carlo policy gradient algoritam koji direktno optimizuje parametre politike koristeći kompletne
 trajektorije epizoda.
 
-## Eksperiment 1: Promenljiva stopa učenja (γ = 0.9)
+## Eksperiment 1: Promenljiva stopa učenja ($\gamma$ = 0.9)
 
-Stopa učenja: α_e = ln(e+1)/(e+1)
+Stopa učenja: $\alpha$_e = ln(e+1)/(e+1)
 
-![REINFORCE sa promenljivim α i γ=0.9](out/02-reinforce/(γ=0.9,_variable_α).png)
+![REINFORCE sa promenljivim alpha i gama=0.9](out/02-reinforce/(gama=0.9,_variable_alpha).png)
 
 **Zapažanja:**
 
@@ -96,7 +96,7 @@ Stopa učenja: α_e = ln(e+1)/(e+1)
 
 ## Eksperiment 2: Poređenje konstantne stope učenja
 
-![REINFORCE sa konstantnim α (poređenje sa Q-učenjem)](out/02-reinforce/(γ=0.9,_constant_α=0.01-q-learning).png)
+![REINFORCE sa konstantnim alpha (poređenje sa Q-učenjem)](out/02-reinforce/(gama=0.9,_constant_αlpha=0.01).png)
 
 **Poređenje sa Q-učenjem:**
 
@@ -112,8 +112,8 @@ Stopa učenja: α_e = ln(e+1)/(e+1)
 ## Q-učenje
 
 - **Prednosti:** Brza konvergencija, stabilno učenje, uči optimalnu determinističku politiku
-- **Parametri:** ε-gramzivo istraživanje ključno za pronalaženje optimalnih putanja
-- **Faktor umanjenja:** γ = 0.9 vs γ = 0.999 pokazuje kompromis između trenutnih i dugoročnih nagrada
+- **Parametri:** $\epsilon$-gramzivo istraživanje ključno za pronalaženje optimalnih putanja
+- **Faktor umanjenja:** $\gamma$ = 0.9 vs $\gamma$ = 0.999 pokazuje kompromis između trenutnih i dugoročnih nagrada
 
 ## REINFORCE
 

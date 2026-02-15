@@ -435,7 +435,7 @@ if __name__ == "__main__":
     stats1 = train_q_learning(agent1, simulator1, num_episodes=1000)
     avg_reward1, rewards1 = test_policy(agent1, simulator1, num_test_episodes=10)
     plot_results(agent1, stats1["episode_rewards"], simulator1,
-                 title_suffix="(γ=0.9, variable α)")
+                 title_suffix="(gama=0.9, variable alpha)")
 
     # ========================================================================
     # EXPERIMENT 2: Constant learning rate, γ = 0.9
@@ -455,7 +455,7 @@ if __name__ == "__main__":
     stats2 = train_q_learning(agent2, simulator2, num_episodes=1000)
     avg_reward2, rewards2 = test_policy(agent2, simulator2, num_test_episodes=10)
     plot_results(agent2, stats2["episode_rewards"], simulator2,
-                 title_suffix="(γ=0.9, constant α=0.1)")
+                 title_suffix="(gama=0.9, constant alpha=0.1)")
 
     # ========================================================================
     # EXPERIMENT 3: Variable learning rate, γ = 0.999
@@ -474,7 +474,7 @@ if __name__ == "__main__":
     stats3 = train_q_learning(agent3, simulator3, num_episodes=1000)
     avg_reward3, rewards3 = test_policy(agent3, simulator3, num_test_episodes=10)
     plot_results(agent3, stats3["episode_rewards"], simulator3,
-                 title_suffix="(γ=0.999, variable α)")
+                 title_suffix="(gama=0.999, variable alpha)")
 
     # ========================================================================
     # COMPARISON OF RESULTS

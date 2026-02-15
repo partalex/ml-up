@@ -474,7 +474,7 @@ if __name__ == "__main__":
     print(f"Average reward: {avg_reward1:.3f}")
     print(f"All rewards: {rewards1}")
 
-    plot_results(agent1, stats1, simulator1, title_suffix="(γ=0.9, variable α)")
+    plot_results(agent1, stats1, simulator1, title_suffix="(gama=0.9, variable alpha)")
 
     # ========================================================================
     # EXPERIMENT 2: Constant learning rate, γ = 0.9
@@ -499,7 +499,7 @@ if __name__ == "__main__":
     print(f"Average reward: {avg_reward2:.3f}")
     print(f"All rewards: {rewards2}")
 
-    plot_results(agent2, stats2, simulator2, title_suffix="(γ=0.9, constant α=0.01-q-learning)")
+    plot_results(agent2, stats2, simulator2, title_suffix="(gama=0.9, constant αlpha=0.01)")
 
     # ========================================================================
     # COMPARISON
