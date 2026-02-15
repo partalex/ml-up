@@ -2,3 +2,7 @@ matplotlib
 numpy
 # dev dependecy
 mypy
+
+# project dependecy
+numpy
+matplotlib
