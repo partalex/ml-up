@@ -89,11 +89,12 @@ class Simulator:
             - new_state: New state of the environment
             - done: Whether the episode is finished
         """
-        # Check if state is terminal
+        # Check if state is terminal - should not happen in normal flow
+        # as we reset after reaching terminal state
         if self.state in self.TERMINAL_STATES:
-            # In terminal state, any action returns the same reward and ends the episode
+            # Safety check - this shouldn't be called
             reward = self.TERMINAL_STATES[self.state]
-            self.state = self.INITIAL_STATE  # Reset to initial state
+            self.state = self.INITIAL_STATE
             self.episode_length = 0
             return reward, self.state, True
 
@@ -101,18 +102,22 @@ class Simulator:
         actual_action = self.get_stochastic_action(action)
 
         # Update state based on actual action
-        self.state = self._update_state(actual_action)
+        new_state = self._update_state(actual_action)
+        self.state = new_state
 
-        # Reward calculation - always 0 in this step, because we get the reward
-        # only when we take an action IN the terminal state (in the next step())
-        reward = 0.0
-
-        # Check if episode is finished
-        # Note: done will be True if we entered a terminal state,
-        # but the reward is obtained only in the next step
         self.episode_length += 1
 
-        return reward, self.state, self._is_done()
+        # Reward calculation - check if we entered a terminal state
+        if self.state in self.TERMINAL_STATES:
+            # We just entered a terminal state - give the reward
+            reward = self.TERMINAL_STATES[self.state]
+            done = True
+        else:
+            # Not in terminal state - no reward
+            reward = 0.0
+            done = self._is_done()
+
+        return reward, self.state, done
 
     @staticmethod
     def get_stochastic_action(intended_action: Action) -> Action:
@@ -241,8 +246,8 @@ if __name__ == "__main__":
     print("  - 0.7 probability: goes in chosen direction")
     print("  - 0.1 probability: goes in each of the other 3 directions")
     print()
-    print("⚠️  IMPORTANT: Reward is obtained only when agent TAKES ACTION")
-    print("    in terminal state, not upon entering!")
+    print("⚠️  IMPORTANT: Reward is obtained immediately when entering")
+    print("    a terminal state (B1, B3, or B5)!")
     print("\n" + "=" * 60 + "\n")
 
     # Run episode
@@ -266,8 +271,8 @@ if __name__ == "__main__":
         print(f"  New state: {new_state_name} (ID={new_state})")
 
         # Special marker if we entered terminal state
-        if new_state in sim.TERMINAL_STATES and reward == 0:
-            print(f"  ⚠️  Entered terminal state! Reward will be obtained in next step.")
+        if new_state in sim.TERMINAL_STATES and reward != 0:
+            print(f"  ⚠️  Entered terminal state! Received reward: {reward:.1f}")
 
         print(f"  Reward: {reward:.2f}")
         print(f"  Done: {done}")

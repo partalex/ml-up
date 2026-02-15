@@ -14,5 +14,5 @@ mypy .\src\simulator.py
 ## Generate report
 
 ```bash
-pandoc README.md -o out/report.pdf
+pandoc report.md -o out/report.pdf
 ```

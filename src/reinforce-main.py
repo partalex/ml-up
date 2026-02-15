@@ -193,14 +193,6 @@ def run_test_episodes(
             reward, next_state, done = simulator.step(action)
             total_reward += reward
 
-            # If we entered a terminal state (done=True, reward=0),
-            # we must execute one more action to get the reward
-            if done and reward == 0.0 and next_state in simulator.TERMINAL_STATES:
-                terminal_action = agent.select_action(next_state, explore=True)
-                terminal_reward, final_state, _ = simulator.step(terminal_action)
-                total_reward += terminal_reward
-                break
-
             state = next_state
             steps += 1
 
@@ -275,22 +267,6 @@ def train_reinforce(
                       f"{simulator.get_state_name(next_state)}, r={reward:.1f}, done={done}")
 
             trajectory.append((state, action, reward))
-
-            # If we entered a terminal state (done=True, reward=0),
-            # we must execute one more action to get the reward
-            if done and reward == 0.0 and next_state in simulator.TERMINAL_STATES:
-                if debug:
-                    print(
-                        f"    → Entered terminal {simulator.get_state_name(next_state)}, executing additional action...")
-                # Now we're in terminal state, execute one more action to get reward
-                terminal_action = agent.select_action(next_state, explore=True)
-                terminal_reward, final_state, _ = simulator.step(terminal_action)
-                if debug:
-                    print(f"    → {simulator.get_state_name(next_state)} -[{terminal_action.name}]-> "
-                          f"{simulator.get_state_name(final_state)}, r={terminal_reward:.1f}")
-                trajectory.append((next_state, terminal_action, terminal_reward))
-                reached_terminal = True
-                break
 
             state = next_state
 
