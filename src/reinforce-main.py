@@ -16,7 +16,7 @@ import random
 from collections import defaultdict
 import matplotlib.pyplot as plt
 import numpy as np
-from simulator import Simulator, Action
+from simulator import Simulator, Action, LearningRateType, arrow_map
 
 
 class ReinforceAgent:
@@ -25,7 +25,7 @@ class ReinforceAgent:
     def __init__(
             self,
             gamma: float = 0.9,
-            learning_rate_type: str = "variable",  # "variable" or "constant"
+            learning_rate_type: LearningRateType = LearningRateType.VARIABLE,
             constant_alpha: float = 0.01,
     ) -> None:
         """
@@ -33,7 +33,7 @@ class ReinforceAgent:
 
         Args:
             gamma: Discount factor for future rewards
-            learning_rate_type: Learning rate type ("variable" or "constant")
+            learning_rate_type: Learning rate strategy (variable or constant)
             constant_alpha: Constant learning rate
         """
         self.gamma = gamma
@@ -58,7 +58,7 @@ class ReinforceAgent:
         Returns:
             Learning rate
         """
-        if self.learning_rate_type == "variable":
+        if self.learning_rate_type == LearningRateType.VARIABLE:
             # α_e = ln(e+1)/(e+1)
             e = episode + 1
             return np.log(e + 1) / (e + 1)
@@ -106,9 +106,9 @@ class ReinforceAgent:
             # np.random.choice returns numpy type, convert back to Action
             idx = np.random.choice(len(actions), p=probs)
             return actions[idx]
-        else:
-            # Choose action with highest probability (greedy)
-            return max(prob_dict.items(), key=lambda x: x[1])[0]
+
+        # Choose action with highest probability (greedy)
+        return max(prob_dict.items(), key=lambda x: x[1])[0]
 
     def update_policy(
             self,
@@ -123,8 +123,7 @@ class ReinforceAgent:
         - G_t = sum of discounted rewards from step t
         - ∇log(π(a|s)) = I(a=a_t) - π(a|s) (for softmax policy)
         Args:
-            episode_trajectory: List of (state, action, reward) for entire episode
-            alpha: Learning rate
+            episode_trajectory: List of (state, action, reward) for entire episode alpha: Learning rate
         """
         trajectory_length = len(episode_trajectory)
 
@@ -426,13 +425,6 @@ def plot_results(
     # 4. Learned policy (grid visualization)
     ax4 = fig.add_subplot(gs[2, :])
 
-    arrow_map = {
-        Action.UP: '↑',
-        Action.DOWN: '↓',
-        Action.LEFT: '←',
-        Action.RIGHT: '→'
-    }
-
     for state, (row, col) in simulator.STATE_TO_COORD.items():
         color = 'lightcoral' if state in simulator.TERMINAL_STATES else 'lightblue'
 
@@ -494,7 +486,7 @@ if __name__ == "__main__":
     simulator1 = Simulator()
     agent1 = ReinforceAgent(
         gamma=0.9,
-        learning_rate_type="variable"
+        learning_rate_type=LearningRateType.VARIABLE,
     )
 
     stats1 = train_reinforce(agent1, simulator1, num_episodes=2000, test_interval=100)
@@ -518,7 +510,7 @@ if __name__ == "__main__":
     simulator2 = Simulator()
     agent2 = ReinforceAgent(
         gamma=0.9,
-        learning_rate_type="constant",
+        learning_rate_type=LearningRateType.CONSTANT,
         constant_alpha=0.01  # Smaller α for REINFORCE (policy gradient is more sensitive)
     )
 

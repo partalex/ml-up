@@ -153,37 +153,6 @@ Policy gradient je osetljiviji na velike korake - može "uništiti" naučenu pol
 
 ---
 
-## 🚀 Kako pokrenuti
-
-### Korak 1: Instalacija
-
-```bash
-pip install numpy matplotlib
-```
-
-### Korak 2: Brzi test (opciono)
-
-```bash
-python test_reinforce_basic.py
-```
-
-**Output**: Provera softmax politike, Monte Carlo returns, gradijenta
-
-### Korak 3: Glavni eksperimenti
-
-```bash
-python src/02-reinforce-reinforce-main.py
-```
-
-**Trajanje**: ~2-3 minuta  
-**Output**:
-
-- 2 PNG grafika
-- Konzolni ispis napretka
-- Finalna prosečna nagrada
-
----
-
 ## 📊 Očekivani rezultati
 
 ### Prosečna nagrada (10 test epizoda)
@@ -269,19 +238,6 @@ Ovo je **score function gradient estimator** - omogućava učenje čak i kada ne
 
 ---
 
-## 🎯 Zaključak
-
-### Status: ✅ KOMPLETNO
-
-Svi zahtevi iz zadatka su implementirani:
-
-1. ✅ REINFORCE algoritam
-2. ✅ Praćenje napretka (zamrzavanje, 10 epizoda, prosečna nagrada)
-3. ✅ Grafički prikaz nagrada tokom učenja
-4. ✅ Grafički prikaz parametara politike
-5. ✅ Eksperimenti sa stopama učenja
-6. ✅ γ = 0.9
-
 ### Dodatno implementirano:
 
 - ✅ Numerički stabilna softmax politika
@@ -290,16 +246,5 @@ Svi zahtevi iz zadatka su implementirani:
 - ✅ Testovi (`test_reinforce_basic.py`)
 - ✅ Kompletna dokumentacija
 - ✅ Mypy tipizacija
-
----
-
-## 📝 Sledeći koraci (opciono)
-
-Mogući unapređenja:
-
-1. **Baseline** - Smanjenje varijanse
-2. **Actor-Critic** - Kombinacija value i policy
-3. **PPO** - Moderna, stabilnija varijanta
-4. **Eksperiment sa γ = 0.999** (kao za Q-learning)
 
 ---

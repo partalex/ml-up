@@ -9,18 +9,12 @@ Implements:
 - Testing learned policy
 - Experiments with different γ values (0.9 and 0.999)
 """
-import enum
+
 import random
 from collections import defaultdict
 import matplotlib.pyplot as plt
 import numpy as np
-from simulator import Simulator, Action
-
-
-# make strenum for learning rate type
-class LearningRateType(enum.StrEnum):
-    VARIABLE = "variable"
-    CONSTANT = "constant"
+from simulator import Simulator, Action, LearningRateType, arrow_map
 
 
 class QLearningAgent:
@@ -103,7 +97,7 @@ class QLearningAgent:
         Args:
             state: State
         Returns:
-            V-value
+            V-value of the state
         """
         actions = [Action.UP, Action.DOWN, Action.LEFT, Action.RIGHT]
         q_values = [self.q_table[(state, action)] for action in actions]
@@ -166,7 +160,7 @@ def train_q_learning(
         num_episodes: Number of episodes for training
         max_steps_per_episode: Maximum number of steps per episode
     Returns:
-        Dictionary with training statistics
+        Dictionary with training statistics (e.g., rewards per episode)
     """
     all_states = list(simulator.STATE_TO_COORD.keys())
     episode_rewards: list[float] = []
@@ -289,7 +283,7 @@ def test_policy(
     print(f"Average total reward: {avg_reward:.3f} ± {std_reward:.3f}")
     print(f"{'=' * 70}\n")
 
-    return avg_reward, episode_rewards  # type: ignore[return-value]
+    return avg_reward, episode_rewards
 
 
 def plot_results(
@@ -358,14 +352,6 @@ def plot_results(
     for state, (row, col) in simulator.STATE_TO_COORD.items():
         best_action = agent.get_best_action(state)
         best_actions_grid[row, col] = best_action
-
-    # Arrow map for actions
-    arrow_map = {
-        Action.UP: '↑',
-        Action.DOWN: '↓',
-        Action.LEFT: '←',
-        Action.RIGHT: '→'
-    }
 
     # Draw grid
     for state, (row, col) in simulator.STATE_TO_COORD.items():
@@ -510,7 +496,7 @@ if __name__ == "__main__":
     print("ANALYSIS:")
     print("=" * 70)
 
-    print("\n📊 Impact of learning rate type (α):")
+    print("\n Impact of learning rate type (α):")
     if abs(avg_reward1 - avg_reward2) < 0.1:
         print("   • Both strategies (variable and constant) give similar results.")
     elif avg_reward1 > avg_reward2:
@@ -518,7 +504,7 @@ if __name__ == "__main__":
     else:
         print("   • Constant learning rate gives better results.")
 
-    print("\n📊 Impact of discount factor (γ):")
+    print("\n Impact of discount factor (γ):")
     diff_gamma = avg_reward3 - avg_reward1
     if abs(diff_gamma) < 0.1:
         print(f"   • Small difference between γ=0.9 and γ=0.999 ({diff_gamma:.3f})")

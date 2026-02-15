@@ -1,9 +1,5 @@
 # Q-Learning Implementacija
 
-## Opis
-
-Ovaj fajl (`reinforce_main.py`) implementira Q-learning algoritam za grid world okruženje sa sledećim karakteristikama:
-
 ## Implementirane funkcionalnosti
 
 ### 1. Q-Learning Algoritam
@@ -55,20 +51,6 @@ Eksperimenti sa dve vrednosti:
 | α (alpha)    | promenljiva / 0.1 | Stopa učenja             |
 | Broj epizoda | 1000              | Broj epizoda treniranja  |
 | Test epizode | 10                | Broj test epizoda        |
-
-## Pokretanje
-
-### Instalacija dependency-ja
-
-```bash
-pip install numpy matplotlib
-```
-
-### Pokretanje eksperimenata
-
-```bash
-python src/q-learn-main.py
-```
 
 ## Eksperimenti
 
@@ -173,14 +155,6 @@ Ako agent sa γ=0.999 postiže prosečnu nagradu od ~2.5, a agent sa γ=0.9 post
 # - Upoređuje rezultate
 ```
 
-## Fajlovi
-
-Kreirani fajlovi nakon pokretanja:
-
-- `q_learning_results_(γ=0.9,_promenljiva_α).png`
-- `q_learning_results_(γ=0.9,_konstantna_α=0.1).png`
-- `q_learning_results_(γ=0.999,_promenljiva_α).png`
-
 ## Napomene
 
 1. **Stohastičnost okruženja**: Simulator je stohastičan (0.7 verovatnoća za izabranu akciju), što znači da isti
@@ -188,9 +162,4 @@ Kreirani fajlovi nakon pokretanja:
 2. **Seed**: Postavljen je `random.seed(42)` za reproduktivnost
 3. **Rupe u grid-u**: B2 i B4 ne postoje - agent ostaje na mestu ako pokuša da uđe
 4. **Terminalna stanja**: Nagrada se dobija tek kada agent preduzme akciju U terminalnom stanju
-
-## Literatura
-
-- Sutton & Barto: "Reinforcement Learning: An Introduction" (2018)
-- Q-learning: Watkins & Dayan (1992)
 

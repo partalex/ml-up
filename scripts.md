@@ -7,7 +7,7 @@ mypy ./src
 ## Run project
 
 ```bash
-python3 src/main.py
+python3 src/simulator.py
 mypy .\src\simulator.py
 ```
 

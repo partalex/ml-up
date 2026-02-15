@@ -72,8 +72,8 @@ Korak 2: Agent u B5 (terminalno)
 
 ```bash
 # Pokreni primer simulatora
-python src/main.py
+python src/simulator.py
 
 # Proveri tipove
-mypy src/simulator.py src/main.py
+mypy src/
 ```

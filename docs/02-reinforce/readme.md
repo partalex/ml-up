@@ -285,26 +285,4 @@ U idealnom slučaju:
 | Stabilnost        | Stabilniji      | Više varijanse        |
 | Interpretabilnost | Q-vrednosti     | Verovatnoće akcija    |
 
-## Dalja unapređenja (opciono)
-
-1. **Baseline** (Actor-Critic)
-    - Koristi V(s) kao baseline da smanji varijansu
-    - G_t - V(s_t) umesto samo G_t
-
-2. **Advantage Actor-Critic (A2C)**
-    - Koristi A(s,a) = Q(s,a) - V(s)
-    - Još manja varijansa
-
-3. **PPO (Proximal Policy Optimization)**
-    - Moderna, stabilnija varijanta policy gradient
-
-4. **Natural Policy Gradient**
-    - Koristi Fisher informacionu matricu
-    - Bolja konvergencija
-
 ---
-
-**Implementacija**: Kompletna  
-**Status**: ✅ Spremno za pokretanje  
-**Datum**: 15. Februar 2026
-

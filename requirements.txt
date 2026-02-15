@@ -1,7 +1,5 @@
-matplotlib
-numpy
 # dev dependecy
-mypy
+numpy
 
 # project dependecy
 numpy
