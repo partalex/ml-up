@@ -1,11 +1,10 @@
-# make int enum for actions
 import enum
 import random
 
 
 class Action(enum.IntEnum):
     """
-    Enum koji definiše moguće akcije koje agent može izvršavati.
+    Enum defining possible actions the agent can take.
     """
     UP = 0
     DOWN = 1
@@ -15,27 +14,24 @@ class Action(enum.IntEnum):
 
 class Simulator:
     """
-    Simulator grid world okruženja za reinforcement learning.
-
-    Grid layout (2 reda × 5 kolona, sa rupama na B2 i B4):
+    Grid world environment simulator for reinforcement learning.
+    Grid layout (2 rows × 5 columns, with holes at B2 and B4):
         A1(S)  A2  A3  A4  A5
         B1(T)  --  B3(T)  --  B5(T)
-
-    Gde su:
-    - A1 (0): početno stanje (S)
-    - A2 (1), A3 (2), A4 (3), A5 (4): obična stanja
-    - B1 (5): terminalno stanje, nagrada = -1
-    - B2: ne postoji (rupa)
-    - B3 (6): terminalno stanje, nagrada = -1
-    - B4: ne postoji (rupa)
-    - B5 (7): terminalno stanje, nagrada = +3
-
-    Okruženje je stohastičko:
-    - 0.7 verovatnoća da agent ide u izabranom smeru
-    - 0.1 verovatnoća za svaki od preostala 3 smera
+    Where:
+    - A1 (0): initial state (S)
+    - A2 (1), A3 (2), A4 (3), A5 (4): regular states
+    - B1 (5): terminal state, reward = -1
+    - B2: does not exist (hole)
+    - B3 (6): terminal state, reward = -1
+    - B4: does not exist (hole)
+    - B5 (7): terminal state, reward = +3
+    The environment is stochastic:
+    - 0.7 probability that the agent moves in the chosen direction
+    - 0.1 probability for each of the remaining 3 directions
     """
 
-    # Mapiranje stanja na koordinate (red, kolona)
+    # State to coordinate mapping (row, column)
     STATE_TO_COORD: dict[int, tuple[int, int]] = {
         0: (0, 0),  # A1
         1: (0, 1),  # A2
@@ -47,70 +43,65 @@ class Simulator:
         7: (1, 4),  # B5
     }
 
-    # Obrnuto mapiranje
+    # Reverse mapping
     COORD_TO_STATE: dict[tuple[int, int], int] = {v: k for k, v in STATE_TO_COORD.items()}
 
-    # Terminalna stanja i njihove nagrade
+    # Terminal states and their rewards
     TERMINAL_STATES: dict[int, float] = {
         5: -1.0,  # B1
         6: -1.0,  # B3
         7: 3.0,  # B5
     }
 
-    # Dimenzije grid-a
+    # Grid dimensions
     ROWS: int = 2
     COLS: int = 5
 
-    # Početno stanje
+    # Initial state
     INITIAL_STATE: int = 0  # A1
 
-    def __init__(self, initial_state: int | None = None) -> None:
+    def __init__(self, initial_state: int = INITIAL_STATE) -> None:
         """
-        Inicijalizuje simulator sa početnim stanjem.
-
+        Initializes the simulator with an initial state.
         Args:
-            initial_state: Početno stanje okruženja (ako je None, koristi se A1)
+            initial_state: Initial state of the environment (if None, uses A1)
         """
-        if initial_state is None:
-            initial_state = self.INITIAL_STATE
         self.state: int = initial_state
         self.episode_length: int = 0
         self.max_episode_length: int = 100
 
     def step(self, action: Action) -> tuple[float, int, bool]:
         """
-        Izvršava akciju i ažurira interno stanje.
-
+        Executes an action and updates the internal state.
         Args:
-            action: Akcija koju agent bira
-
+            action: Action chosen by the agent
         Returns:
-            Tuple sa:
-            - reward: Osvojena nagrada u ovom koraku
-            - new_state: Novo stanje okruženja
-            - done: Da li je epizoda završena
+            Tuple with:
+            - reward: Reward obtained in this step
+            - new_state: New state of the environment
+            - done: Whether the episode is finished
         """
-        # Provera da li je stanje terminalno
+        # Check if state is terminal
         if self.state in self.TERMINAL_STATES:
-            # U terminalnom stanju, bilo koja akcija vraća istu nagradu i završava epizodu
+            # In terminal state, any action returns the same reward and ends the episode
             reward = self.TERMINAL_STATES[self.state]
-            self.state = self.INITIAL_STATE  # Resetuj na početno stanje
+            self.state = self.INITIAL_STATE  # Reset to initial state
             self.episode_length = 0
             return reward, self.state, True
 
-        # Stohastički izbor akcije (0.7 izabrana, 0.1 svaka od ostalih)
+        # Stochastic action selection (0.7 chosen, 0.1 each of others)
         actual_action = self._get_stochastic_action(action)
 
-        # Ažuriranje stanja na osnovu stvarne akcije
+        # Update state based on actual action
         self.state = self._update_state(actual_action)
 
-        # Računanje nagrade - u ovom koraku je uvek 0, jer nagradu dobijamo
-        # tek kada u terminalnom stanju preduzme akciju (u sledećem step()-u)
+        # Reward calculation - always 0 in this step, because we get the reward
+        # only when we take an action IN the terminal state (in the next step())
         reward = 0.0
 
-        # Provera da li je epizoda završena
-        # Napomena: done će biti True ako smo ušli u terminalno stanje,
-        # ali nagrada se dobija tek u sledećem koraku
+        # Check if episode is finished
+        # Note: done will be True if we entered a terminal state,
+        # but the reward is obtained only in the next step
         self.episode_length += 1
         done = self._is_done()
 
@@ -118,39 +109,35 @@ class Simulator:
 
     def _get_stochastic_action(self, intended_action: Action) -> Action:
         """
-        Vraća stvarnu akciju uzimajući u obzir stohastičnost okruženja.
-
+        Returns the actual action taking into account environment stochasticity.
         Args:
-            intended_action: Akcija koju agent želi da izvrši
-
+            intended_action: Action the agent wants to execute
         Returns:
-            Stvarna akcija koja će biti izvršena
+            Actual action that will be executed
         """
         rand = random.random()
 
         if rand < 0.7:
-            # Sa verovatnoćom 0.7 izvršava se izabrana akcija
+            # With 0.7 probability, the chosen action is executed
             return intended_action
-        else:
-            # Sa verovatnoćom 0.3 bira se jedna od ostalih akcija
-            all_actions = [Action.UP, Action.DOWN, Action.LEFT, Action.RIGHT]
-            other_actions = [a for a in all_actions if a != intended_action]
-            return random.choice(other_actions)
+
+        # With 0.3 probability, one of the other actions is chosen
+        all_actions = [Action.UP, Action.DOWN, Action.LEFT, Action.RIGHT]
+        other_actions = [a for a in all_actions if a != intended_action]
+        return random.choice(other_actions)
 
     def _update_state(self, action: Action) -> int:
         """
-        Ažurira interno stanje na osnovu akcije.
-
+        Updates internal state based on action.
         Args:
-            action: Akcija koju agent izvršava
-
+            action: Action the agent executes
         Returns:
-            Novo stanje
+            New state
         """
-        # Konvertuj trenutno stanje u koordinate
+        # Convert current state to coordinates
         row, col = self.STATE_TO_COORD[self.state]
 
-        # Primeni akciju
+        # Apply action
         if action == Action.UP:
             new_row, new_col = row - 1, col
         elif action == Action.DOWN:
@@ -162,45 +149,43 @@ class Simulator:
         else:
             new_row, new_col = row, col
 
-        # Provera da li je nova pozicija van granica (udar u zid)
+        # Check if new position is out of bounds (hit a wall)
         if new_row < 0 or new_row >= self.ROWS or new_col < 0 or new_col >= self.COLS:
-            # Agent ostaje u istom stanju
+            # Agent stays in the same state
             return self.state
 
-        # Provera da li je nova pozicija rupa (B2 ili B4 ne postoje)
+        # Check if new position is a hole (B2 or B4 don't exist)
         if (new_row, new_col) not in self.COORD_TO_STATE:
-            # Agent ostaje u istom stanju (udario u rupu kao u zid)
+            # Agent stays in the same state (hit hole like a wall)
             return self.state
 
-        # Konvertuj koordinate nazad u stanje
+        # Convert coordinates back to state
         return self.COORD_TO_STATE[(new_row, new_col)]
 
     def _compute_reward(self) -> float:
         """
-        Računa nagradu za trenutno stanje.
-
+        Calculates reward for current state.
         Returns:
-            Nagrada
+            Reward
         """
-        # Provera da li je stanje terminalno
+        # Check if state is terminal
         if self.state in self.TERMINAL_STATES:
             return self.TERMINAL_STATES[self.state]
 
-        # U svim ostalim stanjima nema nagrade
+        # In all other states there is no reward
         return 0.0
 
     def _is_done(self) -> bool:
         """
-        Proverava da li je epizoda završena.
-
+        Checks if episode is finished.
         Returns:
-            True ako je epizoda završena, False inače
+            True if episode is finished, False otherwise
         """
-        # Epizoda se završava ako smo u terminalnom stanju
+        # Episode ends if we are in a terminal state
         if self.state in self.TERMINAL_STATES:
             return True
 
-        # Ili ako dostignemo maksimalnu dužinu epizode
+        # Or if we reach maximum episode length
         if self.episode_length >= self.max_episode_length:
             return True
 
@@ -208,13 +193,11 @@ class Simulator:
 
     def reset(self, initial_state: int | None = None) -> int:
         """
-        Resetuje simulator na početno stanje.
-
+        Resets simulator to initial state.
         Args:
-            initial_state: Početno stanje za novu epizodu (ako je None, koristi se A1)
-
+            initial_state: Initial state for new episode (if None, uses A1)
         Returns:
-            Početno stanje
+            Initial state
         """
         if initial_state is None:
             initial_state = self.INITIAL_STATE
@@ -224,13 +207,11 @@ class Simulator:
 
     def get_state_name(self, state: int) -> str:
         """
-        Vraća ime stanja (npr. 'A1', 'B2').
-
+        Returns state name (e.g., 'A1', 'B2').
         Args:
-            state: Brojčani identifikator stanja
-
+            state: Numeric state identifier
         Returns:
-            Ime stanja
+            State name
         """
         row, col = self.STATE_TO_COORD[state]
         row_letter = chr(ord('A') + row)

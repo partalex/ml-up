@@ -1,2 +1,6 @@
 # dev dependecy
 mypy
+
+# project dependecy
+numpy
+matplotlib
